@@ -1,0 +1,105 @@
+﻿@*@*@model WebApplication5.Models.Class
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@*<form asp-controller="Home" name="userform" id="userform" asp-action="userform" method="post" enctype="multipart/form-data">
+    <div class="form-container">
+        <!-- Left Column -->
+        <div class="form-column">
+            <div>
+                <label for="fname">FirstName</label>
+                <input type="text" id="fname" name="fname" />
+            </div>
+            <div>
+                <label for="lname">LastName</label>
+                <input type="text" id="lname" name="lname" />
+            </div>
+            <div>
+                <label for="emails">Email</label>
+                <input type="email" id="emails" name="emails" />
+            </div>
+            <div>
+                <label for="dob">Date of birth</label>
+                <input type="date" id="dob" name="dob" />
+            </div>
+            <div>
+                <p>Gender</p>
+                <label for="male">Male</label>
+                <input type="radio" id="male" name="gen" value="1" />
+                <label for="female">Female</label>
+                <input type="radio" id="female" name="gen" value="2" />
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="form-column">
+            <div>
+                <label for="c_name">Country Name:</label>
+                @Html.DropDownList("CountryDropdown", Model.countryies, "Select Country ", new { id = "CountryDropdown" })
+            </div>
+            <div>
+                <label for="s_name">State Name:</label>
+                @Html.DropDownList("StateDropdown", new SelectList(Enumerable.Empty<SelectListItem>()), "Select State", new { id = "StateDropdown" })
+            </div>
+            <div>
+                <label>Upload files</label>
+                <div>
+                    <input type="file" name="file" id="file" accept=".jpg" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="myFunction()">Submit</button>
+</form>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#CountryDropdown').change(function () {
+            var countryId = $(this).val();
+            if (countryId) {
+                $.ajax({
+                    url: '@Url.Action("GetStatesByCountry", "Home")',
+                    type: "GET",
+                    data: { countryId: countryId },
+                    success: function (data) {
+                        var stateDropdown = $('#StateDropdown');
+                        stateDropdown.empty();
+                        stateDropdown.append('<option value="">Select State</option>');
+                        $.each(data, function (index, state) {
+                            stateDropdown.append('<option value="' + state.s_id + '">' + state.s_name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#StateDropdown').empty();
+                $('#StateDropdown').append('<option value="">Select State</option>');
+            }
+        });
+    });
+
+    function myFunction() {
+        $('#userform').submit();
+    }
+</script>*@
+
+@*<style>
+    .form-container {
+        display: flex;
+        gap: 20px; /* Adjust the gap between columns as needed */
+    }
+
+    .form-column {
+        flex: 1;
+        padding: 10px; /* Add padding for better spacing */
+        box-sizing: border-box; /* Ensure padding doesn't affect the width */
+    }
+
+        .form-column div {
+            margin-bottom: 15px; /* Add spacing between form fields */
+        }
+</style>*@

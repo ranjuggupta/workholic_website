@@ -1,0 +1,278 @@
+﻿@*@model WebApplication5.Models.Class
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>@ViewData["Title"]</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Form with Table</title>
+    <style>
+        /* Reset default margin and padding */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Styling for the table */
+        table {
+            width: 100%; /* Make table take full width of container */
+            border-collapse: collapse; /* Collapse borders */
+            table-layout: fixed; /* Fixed layout to maintain column widths */
+        }
+        th, td {
+            padding: 8px; /* Padding inside cells */
+            text-align: left; /* Align text to the left */
+            border: 1px solid #ddd; /* Border style */
+            white-space: nowrap; /* Prevent wrapping of content */
+        }
+        th {
+            background-color: #f2f2f2; /* Background color for header */
+        }
+
+        /* Optional: Styling for table header */
+        thead {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Optional: Styling for table header cells */
+        th {
+            background-color: #333;
+            color: white;
+            position: sticky; /* Sticky header */
+            top: 0; /* Stick to the top */
+        }
+
+        /* Set fixed height for tbody to enable scrolling */
+        tbody {
+            display: block;
+            height: 250px; /* Adjust this height as needed to show 10 rows */
+            overflow-y: scroll; /* Enable vertical scrolling */
+        }
+        tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+        thead, tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .toggle-button {
+            margin: 10px 0;
+        }
+        .btn {
+            background-color: DodgerBlue;
+            border: none;
+            color: white;
+            
+          }
+    </style>
+</head>
+<body>
+<form asp-controller="Home" id="form1" asp-action="Index" method="post">
+    <Div id="Checking">
+        <div>
+            <label for="value1">First number:</label>
+            <input type="number" name="value1" id="value1" />
+            
+        </div>
+    <div>
+        <br>
+    </div>
+    <div>
+        <label for="value2">Second number:</label>
+            <input type="number" for="value2" name="value2" id="value2" />
+    </div>
+    <div>
+        <br>
+    </div>
+    <div>
+        <label for="tax">tax</label>
+            <input type="number" for="tax" name="tax" id="tax" />
+    </div>  
+    <div>
+        <br>
+    </div>
+    <div>
+        <label for="Ledger_id">Ledger type:</label>
+        <select name="Ledger_id" id="Ledger_id">
+            <option value="1">Income</option>
+            <option value="2">Expense</option>
+            <option value="3">Advance Tax</option>
+        </select>
+
+        <label for="operation_id">Operation:</label>
+        <select name="operation_id" id="operation_id">
+            <option value="1">Addition</option>
+            <option value="2">Subtraction</option>
+            <option value="3">Multiply</option>
+            <option value="4">Division</option>
+        </select>
+    </div>
+    <div></div>
+        <button type="button" class="btn btn-primary" onclick="myFunction()">Submit</button>
+    <div>
+        <br>
+    </div>
+   </Div>     
+        <div>
+            <label>First Number</label>
+            <input type="text" class="col-sm-3 col-form-label" value="@Model.value1" disabled>
+            <label>Second Number</label>
+            <input type="text" class="col-sm-3 col-form-label" value="@Model.value2" disabled>
+        </div>
+        <div>
+            <br>
+        </div>
+        
+        <div >
+            
+            <label>Amount</label>
+            <input type="text" class="col-sm-3 col-form-label" value="@Model.result1" disabled>
+            <label>Tax</label>
+            <input type="text" class="col-sm-3 col-form-label" value="@Model.result2" disabled>
+        </div>
+       
+        
+        <br>
+
+    <button class="toggle-button" type="button" onclick="toggleTable('dataTable')">All Data</button>
+    <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>OperationID</th>
+                        <th>Tax</th>
+                        <th>Value 1</th>
+                        <th>Value 2</th>
+                        <th>Result 1</th>
+                        <th>Result 2</th>
+                        <th>Ledger</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+        <tbody>
+            @foreach (var item in Model.Employees)
+            {
+                <tr>
+                    <td>@item.id</td>
+                    <td>@item.operation_id</td>
+                    <td>@item.tax</td>
+                    <td>@item.value1</td>
+                    <td>@item.value2</td>
+                    <td>@item.result1</td>
+                    <td>@item.result2</td>
+                    <td>@item.Ledger</td>
+                            <td>
+                                
+                                <a href="@Url.Action("Update", "Home", new { id = item.id ,value1=item.value1,value2=item.value2,tax=item.tax,Ledger_id=item.Ledger_id,operation_id=item.operation_id})">Update</a>
+                                
+                            </td>
+                            <td>
+                                <form asp-action="Delete" method="post">
+                                    <input type="hidden" name="id" value="@item.id" />
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+    <br>
+     <br>
+            <button class="toggle-button" type="button" onclick="toggleTable('secondTable')">Ledger Data</button>
+            <div class="table-container">
+                <table id="secondTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Income</th>
+                            <th>Expense</th>
+                            <th>ADVANCETAX</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Departments)
+                        {
+                            <tr>
+                                <td>@item.id</td>
+                                <td>@item.Income</td>
+                                <td>@item.Expense</td>
+                                <td>@item.ADVANCETAX</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                    
+
+    </div>
+           
+    </form>
+    <script>
+        function toggleTable(tableId) {
+            var table = document.getElementById(tableId);
+            if (table.style.display === "none") {
+                table.style.display = "table"; // Show the table
+            } else {
+                table.style.display = "none"; // Hide the table
+            }
+        }
+
+            function myFunction() {
+                debugger;
+                let x = document.getElementById("value1").value;
+                let y = document.getElementById("value2").value;
+                let z = document.getElementById("tax").value;
+
+                let text;
+                if (x.length <= 5) {
+                } else {
+                    alert("You can enter 5 only character ");
+                    return;
+                }
+                if (!/^[0-9]+$/.test(x)) {
+                    alert("Please only enter numeric characters (Allowed input:0-9)")
+                }            //document.getElementById("demo").innerHTML = text;
+
+                let text1;
+                if (y.length <= 5) {
+                } else {
+                    alert("You can enter 5 only character ");
+                }
+                if (!/^[0-9]+$/.test(y)) {
+                    alert("Please only enter numeric characters (Allowed input:0-9)")
+                }
+
+                let text2;
+                if (z.length <= 5) {
+                } else {
+                    alert("You can enter 5 only character ");
+                }
+                if (!/^[0-9]+$/.test(z)) {
+                    alert("Please only enter numeric characters (Allowed input:0-9)")
+                }
+
+                $('#form1').submit();
+            }
+
+       
+        
+    </script>
+    </body>
+    </html>
+
+*@

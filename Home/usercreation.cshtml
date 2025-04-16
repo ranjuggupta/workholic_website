@@ -1,0 +1,144 @@
+﻿<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
+<form asp-controller="Home" name="form3" id="form3" asp-action="usercreation" method="post" enctype="multipart/form-data">
+
+ 
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+
+                        <div class="mb-md-5 mt-md-4 pb-5">
+
+                            <h2 class="fw-bold mb-2 text-uppercase">Signup</h2>
+                            <p class="text-white-50 mb-5">Please enter your details to register!</p>
+
+                            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    @ViewBag.ErrorMessage
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+                            {
+                                <div class="alert alert-success" role="alert">
+                                    @ViewBag.SuccessMessage
+                                </div>
+                            }
+
+                            <div class="form-outline form-white mb-4">
+                                <input type="text" id="username" name="username" class="form-control form-control-lg" required />
+                                <label class="form-label" for="username">Full Name</label>
+                            </div>
+
+                            <div class="form-outline form-white mb-4">
+                                <input type="email" id="email" name="email" class="form-control form-control-lg" required />
+                                <label class="form-label" for="email">Email</label>
+                            </div>
+
+                            <div class="form-outline form-white mb-4">
+                                <input type="number" id="phno" name="phno" class="form-control form-control-lg" required />
+                                <label class="form-label" for="phno">Phone Number</label>
+                            </div>
+
+                            <div class="form-outline form-white mb-4">
+                                <input type="password" id="pass_word" name="pass_word" class="form-control form-control-lg" required />
+                                <label class="form-label" for="pass_word">Password</label>
+                            </div>
+
+                            <div class="form-outline form-white mb-4">
+                                <input type="password" id="confirmpassword" name="confirmpassword" class="form-control form-control-lg" required />
+                                <label class="form-label" for="confirmpassword">Confirm Password</label>
+                            </div>
+
+                            <div>
+                                <label for="Login">Ledger Type:</label>
+                                <select name="login_id" id="Login_id" class="form-control" onchange="checkVendor()">
+                                    <option value="1">Admin</option>
+                                    <option value="2">User</option>
+                                    <option value="3">Vendor</option>
+                                </select>
+                            </div>
+
+                            <!-- Aadhaar Upload Field (Initially Hidden) -->
+                            <div id="aadhaarUpload" class="hidden mt-3">
+                                <label for="aadhaar">Upload Aadhaar Card:</label>
+                                <input type="file" id="aadhaar" name="aadhaar" class="form-control" accept=".jpg, .jpeg, .png, .pdf">
+                            </div>
+
+                            <div class="mt-4">
+                                <a href="@Url.Action("Login", "Home")" class="btn btn-outline-light btn-lg px-5">Back</a>
+                                <button type="button" class="btn btn-outline-light btn-lg px-5" onclick="validateForm()">Register</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    function checkVendor() {
+        let loginType = document.getElementById("Login_id").value;
+        let aadhaarField = document.getElementById("aadhaarUpload");
+
+        if (loginType == "3") {  // If Vendor is selected
+            aadhaarField.style.display = "block";
+        } else {
+            aadhaarField.style.display = "none";
+        }
+    }
+
+    function validateForm() {
+        let username = document.getElementById("username").value;
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("pass_word").value;
+        let confirmPassword = document.getElementById("confirmpassword").value;
+        let phone = document.getElementById("phno").value;
+        let loginType = document.getElementById("Login_id").value;
+        let aadhaar = document.getElementById("aadhaar");
+
+  
+        let emailPattern = /^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        let textPattern = /^(?=.*[a-z])(?=.*[A-Z])[A-Za-z.]+$/;
+      let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$!%*?&])[A-Za-z\d$!%*?&]{8,20}$/;
+
+        if (username.length < 8 || username.length > 30) {
+            alert("Username must be between 9 and 30 characters.");
+            return false;
+        }
+        if (!emailPattern.test(email)) {
+            alert("Please enter a valid email address.");
+            return false;
+        }
+        if (phone.length !== 10) {
+            alert("Phone number must be exactly 10 digits.");
+            return false;
+        }
+        if (!passwordPattern.test(password)) {
+            alert("Password must be 8-20 characters long, include at least one uppercase letter, one lowercase letter, one digit, and one special character ($, !, %, *, ?, &).");
+            return false;
+        }
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return false;
+        }
+
+        // Aadhaar file validation for vendors
+        if (loginType == "3" && aadhaar.files.length === 0) {
+            alert("Vendors must upload an Aadhaar card.");
+            return false;
+        }
+
+        $('#form3').submit();
+    }
+</script>

@@ -1,0 +1,327 @@
+﻿    @inject IHttpContextAccessor HttpContextAccessor;
+@{
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+    var loginId = HttpContextAccessor.HttpContext.Session.GetString("UserType");
+}
+    @model Joddetails
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>JobEntry - Job Portal Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/style.css" rel="stylesheet">
+    <style>
+        .job-item {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #tab-1 {
+            max-height: 500px; /* Set a maximum height (adjust as needed) */
+            overflow-y: auto; /* Enable vertical scroll */
+            padding-right: 15px; /* Add space for scrollbar */
+        }
+
+        #tab-2 {
+            max-height: 500px; /* Set a maximum height (adjust as needed) */
+            overflow-y: auto; /* Enable vertical scroll */
+            padding-right: 15px; /* Add space for scrollbar */
+        }
+
+        #tab-3 {
+            max-height: 500px; /* Set a maximum height (adjust as needed) */
+            overflow-y: auto; /* Enable vertical scroll */
+            padding-right: 15px; /* Add space for scrollbar */
+        }
+        /* Optional: Ensure that the job items still have the correct height when scrolling */
+        .job-item {
+            margin-bottom: 10px; /* Adjust spacing between items */
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container-xxl bg-white p-0">
+
+        <!-- Jobs Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Job Listing</h1>
+                <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
+                    <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
+                        @{
+                            if (loginId == "1")
+                            {
+                                <li class="nav-item">
+                                    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill" href="#tab-1">
+                                        <h6 class="mt-n1 mb-0">JOB LIST</h6>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="tab" href="#tab-3">
+                                        <h6 class="mt-n1 mb-0">Rejected Job</h6>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="tab" href="#tab-4">
+                                        <h6 class="mt-n1 mb-0">Vendor's detail</h6>
+                                    </a>
+                                </li>
+
+                            }
+
+                            if (loginId == "2")
+                            {
+                                <li class="nav-item">
+                                    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="tab" href="#tab-1">
+                                        <h6 class="mt-n1 mb-0">JOB LIST</h6>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="tab" href="#tab-2">
+                                        <h6 class="mt-n1 mb-0">Applied Job</h6>
+                                    </a>
+                                </li>
+                            }
+                            if (loginId == "3")
+                            {
+                                <li class="nav-item">
+                                    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" data-bs-toggle="pill" href="#tab-1">
+                                        <h6 class="mt-n1 mb-0">JOB LIST</h6>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="d-flex align-items-center text-start mx-3 pb-3" data-bs-toggle="tab" href="#tab-3">
+                                        <h6 class="mt-n1 mb-0">Rejected Job</h6>
+                                    </a>
+                                </li>
+
+
+                            }
+                        }
+                    </ul>
+                    <div class="tab-content">
+                        <input type="text" id="jobSearch" placeholder="Search for a job..." class="form-control mb-4">
+
+                        <div id="tab-1" class="tab-pane fade show p-0 active">
+                            @foreach (var job in Model.JobData.Where(j => j.Applied == 0 && j.Reject == 0))
+                            {
+                                <div class="job-item p-4 mb-4 clickable-div" data-href="@Url.Action("JobDetails", "Home", new { Jobid = job.JobID })">
+
+                                    <div class="row g-4">
+                                        <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                            <img class="flex-shrink-0 img-fluid border rounded" src="~/UploadedFiles/com-logo-1.jpg" alt="" style="width: 80px; height: 80px;">
+                                            <div class="text-start ps-4">
+                                                <h5 class="mb-3">@job.jobrole</h5>
+                                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@job.Statename ,@job.Countryname</span>
+                                                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@job.JobType</span>
+                                                <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@job.Currencysymbol,@job.SalaryStart - @job.SalaryEnd</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                            <div class="d-flex mb-3">
+                                                @*                                                <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                            *@
+                                                @*    <a href="@Url.Action((loginId == "1" ? "Rejectjob" : "ApplieJob"), "Home")?JobId=@job.JobID" class="btn btn-primary">@(loginId == "1" ? "Reject Now" : "Apply Now")</a>
+                                            *@
+                                                @if (loginId == "1")
+                                                {
+                                                    <a href="@Url.Action("Rejectjob", "Home")?JobId=@job.JobID" class="btn btn-primary">Reject Now</a>
+                                                }
+                                                else if (loginId == "2")
+                                                {
+                                                    <a href="@Url.Action("ApplieJob", "Home")?JobId=@job.JobID" class="btn btn-primary">Apply Now</a>
+                                                }
+
+
+
+                                            </div>
+                                            <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Date Line: @job.Createdon.ToString("dd MMM, yyyy")</small>
+                                        </div>
+                                    </div>
+                                </div>  
+
+                            }
+
+                        </div>
+                        <div id="tab-2" class="tab-pane fade show p-0">
+                            @foreach (var job in Model.JobData.Where(j => j.Applied == 1))
+                            {
+                                <div class="job-item p-4 mb-4 clickable-div" data-href="@Url.Action("JobDetails", "Home")?Jobid=@job.JobID">
+                                    <div class="row g-4">
+                                        <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                            <img class="flex-shrink-0 img-fluid border rounded" src="~/UploadedFiles/com-logo-1.jpg" alt="" style="width: 80px; height: 80px;">
+                                            <div class="text-start ps-4">
+                                                <h5 class="mb-3">@job.jobrole</h5>
+                                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@job.Statename ,@job.Countryname</span>
+                                                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@job.JobType</span>
+                                                <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@job.Currencysymbol,@job.SalaryStart - @job.SalaryEnd</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                            <div class="d-flex mb-3">
+                                                @*                                                <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                            *@                                                <a href="" class="btn btn-primary">Applied</a>
+                                            </div>
+                                            <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Date Line: @job.Appliedon?.ToString("dd MMM, yyyy")</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+                        </div>
+                        <div id="tab-3" class="tab-pane fade show p-0">
+                            @foreach (var job in Model.JobData.Where(j => j.Reject == 1))
+                            {
+                                <div class="job-item p-4 mb-4 clickable-div" data-href="@Url.Action("JobDetails", "Home")?Jobid=@job.JobID">
+                                    <div class="row g-4">
+                                        <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                            <img class="flex-shrink-0 img-fluid border rounded" src="~/UploadedFiles/com-logo-1.jpg" alt="" style="width: 80px; height: 80px;">
+                                            <div class="text-start ps-4">
+                                                <h5 class="mb-3">@job.jobrole</h5>
+                                                <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>@job.Statename ,@job.Countryname</span>
+                                                <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>@job.JobType</span>
+                                                <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>@job.Currencysymbol,@job.SalaryStart - @job.SalaryEnd</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                            <div class="d-flex mb-3">
+                                                @*                                                <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                            *@                                                <a href="" class="btn btn-primary">Rejected</a>
+                                            </div>
+                                            <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Date Line: @job.Rejecton?.ToString("dd MMM, yyyy")</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+                        </div>
+                        <!-- Vendor Details (For Login ID = 3) -->
+                        <div id="tab-4" class="tab-pane fade show p-0">
+                            @foreach (var vendor in Model.AllData.Where(v => v.Login_id == 3))
+                            {
+                                <div class="job-item p-4 mb-4">
+                                    <div class="row g-4">
+                                        <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                            <img class="flex-shrink-0 img-fluid border rounded" src="~/UploadedFiles/com-logo-1.jpg" alt="" style="width: 80px; height: 80px;">
+                                            <div class="text-start ps-4">
+                                                <h5 class="mb-3">Vendor Name: @vendor.username</h5>
+                                                <span class="text-truncate me-3"><i class="fa fa-envelope text-primary me-2"></i>@vendor.email</span>
+                                                <span class="text-truncate me-3"><i class="fa fa-phone text-primary me-2"></i>@vendor.phno</span>
+
+                                                <span class="text-truncate me-0">
+                                                    <i class="fa fa-id-card text-primary me-2"></i>Aadhaar:
+                                                    <a href="@Url.Content("~/img/" + vendor.Aadhaardata)" class="btn btn-primary" target="_blank" rel="noopener noreferrer">View</a>
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                        @* <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                            <a href="@Url.Action("VendorDetails", "Home", new { VendorId = vendor.Login_id })" class="btn btn-primary">View Details</a>
+                                        </div> *@
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/wow/wow.min.js"></script>
+    <script src="~/lib/easing/easing.min.js"></script>
+    <script src="~/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+        <script src="~/js/main.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                // When a tab is activated
+                $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                    $('.tab-pane').css({
+                        'max-height': '',
+                        'overflow-y': '',
+                        'padding-right': ''
+                    });
+
+                    var activeTabId = $(e.target).attr('href');
+
+                    $(activeTabId).css({
+                        'max-height': '500px',
+                        'overflow-y': 'auto',
+                        'padding-right': '15px'
+                    });
+                });
+
+                // Handle job search input
+                document.getElementById('jobSearch').addEventListener('input', function () {
+                    var searchQuery = this.value.toLowerCase();
+                    var jobItems = document.querySelectorAll('.job-item');
+
+                    jobItems.forEach(function (item) {
+                        var itemText = item.innerText.toLowerCase();
+
+                        if (itemText.includes(searchQuery)) {
+                            item.classList.remove('hidden');
+                        } else {
+                            item.classList.add('hidden');
+                        }
+                    });
+                });
+
+                // Make .job-item clickable
+                $('.job-item').on('click', function () {
+                    var targetUrl = $(this).data('href');
+                    if (targetUrl) {
+                        window.location.href = targetUrl;
+                    }
+                });
+
+            });
+        </script>
+
+</body>
+
+</html>
